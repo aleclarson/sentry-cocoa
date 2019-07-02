@@ -45,6 +45,10 @@
 #import <UIKit/UIKit.h>
 #endif
 
+#if SentryCrashCRASH_HOST_MAC
+#import <AppKit/AppKit.h>
+#endif
+
 
 // ============================================================================
 #pragma mark - Globals -
@@ -314,6 +318,21 @@ static NSString* getBasePath()
     [nCenter addObserver:self
                 selector:@selector(applicationWillTerminate)
                     name:UIApplicationWillTerminateNotification
+                  object:nil];
+#endif
+#if SentryCrashCRASH_HOST_MAC
+    NSNotificationCenter* nCenter = [NSNotificationCenter defaultCenter];
+    [nCenter addObserver:self
+                selector:@selector(applicationDidBecomeActive)
+                    name:NSApplicationDidBecomeActiveNotification
+                  object:nil];
+    [nCenter addObserver:self
+                selector:@selector(applicationWillResignActive)
+                    name:NSApplicationWillResignActiveNotification
+                  object:nil];
+    [nCenter addObserver:self
+                selector:@selector(applicationWillTerminate)
+                    name:NSApplicationWillTerminateNotification
                   object:nil];
 #endif
 #if SentryCrashCRASH_HAS_NSEXTENSION
